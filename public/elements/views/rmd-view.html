@@ -1,0 +1,102 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown.html">
+<link rel="import" href="../../bower_components/px-dropdown/px-dropdown-content.html">
+<link rel="import" href="../asset-browser/asset-browser.html">
+<link rel="import" href="../seed-table/seed-table.html">
+<link rel="import" href="../kpi-bar/kpi-bar.html">
+<link rel="import" href="../../bower_components/px-card/px-card.html">
+<link rel="import" href="../../bower_components/px-spinner/px-spinner.html">
+
+<dom-module id="rmd-view">
+  <style>
+  :host {
+    --iron-icon-width: 16px;
+    --iron-icon-height: 16px;
+  }
+  </style>
+  <template>
+      <h1>Test</h1>
+      <px-card header-text="Card" icon="px-fea:analysis"><div class='actions'><px-icon icon='px-nav:new-window'></px-icon><px-icon icon='px-utl:help'></px-icon><px-icon icon='px-utl:app-settings'></px-icon></div><p>This is the main content area of a Predix card.</p></px-card>
+      
+      <px-spinner size="100"></px-spinner>
+   
+  </template>
+  <script>
+    Polymer({
+      is: 'rmd-view',
+      properties: {
+        rmdAssetModel: {
+          type: Object,
+          observer: '_assetModelChanged'
+        },
+        openedAsset: {
+          type: Object,
+          observer: '_openedAssetChanged'
+        },
+        rmdTableData: {
+          type: Object
+        },
+        displayTags: {
+          type: Array
+        },
+        showTimeseriesChart: {
+          type: Boolean,
+          value: false
+        },
+        wsUrl: {
+          type: String
+        },
+        kpiBarWrapperState: {
+          type: String
+        }
+      },
+
+      _formatTagsForDisplay: function(assetTag) {
+        var tags = []
+        Object.keys(assetTag).forEach(function(key) {
+          var tag = {
+            key: assetTag[key].timeseriesDatasource.tag,
+            val: assetTag[key].label,
+            unit: 'psi'
+          }
+          if (tag.key.indexOf('Temperature')>-1) {
+            tag.unit = 'F';
+          } else if (tag.key.indexOf('Ratio')>-1) {
+            tag.unit = '';
+          } else if (tag.key.indexOf('Velocity')>-1) {
+            tag.unit = 'm/s'
+          }
+          tags.push(tag);
+        });
+        return tags;
+      },
+      _openedAssetChanged: function(newVal) {
+        console.log('asset opened:', newVal);
+        this.$.datatableAjaxEl.url = "/api/datagrid" + newVal.uri;
+        this.$.kpiBarAjaxEl.url = this.$.datatableAjaxEl.url + '/summary';
+        this.$.datatableAjaxEl.generateRequest();
+        if (newVal.assetTag) {
+          this.displayTags = this._formatTagsForDisplay(newVal.assetTag);
+        }
+        this.showTimeseriesChart = newVal.uri.indexOf('asset') >= 0;
+      },
+      _assetModelChanged: function(newVal) {
+        console.log('asset model changed:', newVal);
+      },
+
+      // We'll load the timeseries-chart asynchronously, since it's pretty heavy.
+      _loadFragment: function(elementId, fragmentPath) {
+        if (Polymer.isInstance(this.$[elementId])) {
+          return;
+        }
+        Polymer.Base.importHref(fragmentPath, null, function() {
+          console.log('failed to load:', fragmentPath);
+        }, true);
+      },
+
+      ready: function(){
+      }
+    });
+  </script>
+</dom-module>
