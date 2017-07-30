@@ -1,0 +1,26 @@
+{
+  "name": "polymer-ajax",
+  "authors": [
+    "yayes2 <yayes.aidan@gmail.com>"
+  ],
+  "main": "polymer.ajax.js",
+  "license": "MIT",
+  "homepage": "http://yayes2.com/projects/polymer-ajax",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "ec658fa986",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "ec658fa986dbb94456f92c28b9652bc32b1fe583"
+  },
+  "_source": "https://github.com/yayestechlab/polymer-ajax.git",
+  "_target": "*",
+  "_originalSource": "polymer-ajax",
+  "_direct": true
+}

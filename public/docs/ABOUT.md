@@ -1,4 +1,4 @@
-<!-- Note: the image links are a little funky.
+<!-- Note:  the image links are a little funky.
       we're using the ../docs/images path so we can serve the images in github, or the /about page of the app.
  -->
 The Predix WebApp Starter ("Starter") is a starter kit that accelerates development of modern web applications integrated with Predix™.  Developers can get faster to a Predix web application by building upon the Starter and its components than starting one on their own.  The Starter makes use of best practices and class-leading technologies to provide a highly extensible and configurable base web application that is suitable for both prototying and official development.
