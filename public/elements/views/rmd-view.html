@@ -7,8 +7,6 @@
 <link rel="import" href="../asset-browser/asset-browser.html">
 <link rel="import" href="../seed-table/seed-table.html">
 <link rel="import" href="../kpi-bar/kpi-bar.html">
-<link rel="import" href="../../bower_components/px-card/px-card.html">
-<link rel="import" href="../../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../../bower_components/google-map/google-map.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
@@ -19,12 +17,206 @@
     --iron-icon-height: 16px;
   }
       google-map{
-          height:300px;
+          height:100vh;
+          width: 100vw;
       }
+      
+       /* Content Top Bar */
+        .content-top-bar{
+            background-color: #fff;
+            /*display: inline-block;*/ float: left;
+            vertical-align: top;
+            width: 100%;
+            height: 40px;
+            padding: 10px;
+            /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);*/
+            z-index: 3;
+            margin-right: 50px;
+        }
+        .content-top-bar-text-wrapper {
+           margin-top: -33px;
+            color: #95989A;
+        }
+        .content-top-bar-text-wrapper h6
+        {
+            font-weight: 300 !important;
+            font-size: 18px;
+            width: 200px;
+            display: inline-block;
+        }
+        .content-top-bar-text-wrapper p
+        {
+            display: inline-block;
+        }
+        .truck-name
+        {
+            cursor: pointer;
+            color: #42B4D2;
+            margin-left: 20px;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 150px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            display: none;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {background-color: #f1f1f1; color: #42B4D2;}
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+      
+      /* Map */
+.map
+{
+    background-color: #E4E4E4;
+    /*display: inline-block*/   float: left;
+     width: /*904.0468px*/ 75%;
+    height: 100vh;
+    z-index: -1;
+  
+}
+/* Content Sidebar */
+.content-sidebar
+{
+    background-color: #F7F7F7;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 290px;
+    height: 100vh;
+    float: left;
+    
+}
+.content-sidebar .truck-name, .content-sidebar .truck-status, .content-sidebar .truck-artifacts
+{
+    border-bottom: 1px solid #E1E3E7;
+    margin-left: 0px;
+    padding: 20px;
+}
+.content-sidebar .truck-status, .content-sidebar .truck-artifacts
+{
+    padding-top: 0;
+}
+.content-sidebar .truck-assistance
+{
+    padding: 20px;
+    margin-left: 70px;
+}
+.content-sidebar h4
+{
+    color: #42B4D2;
+}
+.content-sidebar ul
+{
+    list-style-type: none;
+    margin: 0; padding: 0;
+}
+.content-sidebar li
+{
+    margin-bottom: 10px;
+    margin-left: 0;
+}
+.truck-status, .truck-artifacts
+{
+    margin-left: 20px;
+}
+.warning-status
+{
+    color: #FF6E62;
+}
+.good-status
+{
+    color: #0BD861;
+}
+.truck-assistance-btn
+{
+    padding: 10px;
+    background-color: #42B4D2;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    
+    
+}
   </style>
   <template>
       
-      <iron-ajax id="ajaxRequest"
+      
+
+      
+      <div class="content-top-bar">
+            <div class="content-top-bar-text-wrapper">
+                <h6>Transport Overview&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</h6><p class="truck-amt">2 Trucks&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|</p>
+                
+                <div class="dropdown">
+                        <p class="truck-name">Truck 1<p style="font-size: 10px; color:#42B4D2;">&nbsp;&nbsp;V</p></p>
+                    
+                    
+                        
+                        <div class="dropdown-content">
+                            <a href="#">Truck 2</a>
+                        </div>
+                   </div>
+                
+            </div>
+        </div>
+      
+      <div class="content content-overview">
+          <div class="content-sidebar">
+                    <div class="truck-name">
+                        Truck 1
+                    </div>
+                    
+                    <div class="truck-status">
+                        <h4>Status</h4>
+                        <table class="w3-table">
+                            <tr>
+                              <td width="170">TEMPERATURE</td>
+                              <td class="warning-status">WARNING</td>
+                            </tr>
+                            <tr>
+                              <td>HUMDITY</td>
+                              <td class="good-status">GOOD</td>
+                            </tr>
+                            <tr>
+                              <td>GAS LEVEL</td>
+                              <td class="good-status">GOOD</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
+                    <div class="truck-artifacts">
+                        <h4>Artifacts</h4>
+                        <ul>
+                            <li class="good-status">Painting</li>
+                            <li class="good-status">Pottery</li>
+                            <li class="warning-status">Wax Figure</li>
+                            
+                        </ul>
+                    </div>
+                    
+                    <div class="truck-assistance">
+                        <button type="button" class="truck-assistance-btn">
+                            Send Assitance
+                        </button>
+                    </div>
+                </div>
+                <div class="map">
+                    <iron-ajax id="ajaxRequest"
             url="https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints"
             handle-as="json"
             on-response="handleResponse"
@@ -34,25 +226,15 @@
                  >
       </iron-ajax>
       
-<google-map fit-to-marker api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-  <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
-</google-map>
+    <google-map fit-to-marker api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+      <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+    </google-map>
       
-      <h1>Test</h1>
-      
-      <px-card header-text="Card" icon="px-fea:analysis">
-          <div class='actions'>
-              <px-icon icon='px-nav:new-window'>              </px-icon>
-              <px-icon icon='px-utl:help'>              </px-icon>
-              <px-icon icon='px-utl:app-settings'>              </px-icon>
+                    
+                </div>
+                
+                
           </div>
-          <p>
-              This is the main content area of a Predix card.
-          </p>
-      </px-card>      
-      
-      <px-spinner size="100">
-      </px-spinner>   
 
    
   </template>

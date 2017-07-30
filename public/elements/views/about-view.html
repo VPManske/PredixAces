@@ -3,31 +3,185 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="../../bower_components/marked-element/marked-element.html">
-
-
 <dom-module id="about-view">
-  <template>
-    <px-card id="myCard" header-text="About this application">
-      <style is="custom-style">
-        div.markdown-html > h2 {
-          margin-top: 0;
+    <style>
+        .content-analytics
+        {
+            background-color: #E4E4E4;
+            height: 100vh;
+            margin-left: -220px;
+            margin-top: -55px;
         }
-      </style>
-      <div>
-        <marked-element id="aboutContentMarkdown" markdown="">
-          <div class="markdown-html"></div>
-        </marked-element>      </div>
-    </px-card>
+        .analytics-block-wrapper
+        {
+            margin-left: 100px;
+            clear: both;
+        }
+        .analytics-block{
+            height: 300px;
+            margin-left: 125px;
+            margin-top: 60px;
+            margin-right: -115px;
+            background-color: white;
+            float: left;
+            
+        }
+        .analytics-block-art
+        {
+            height: 260px;
+            width: 550px;
+            margin-bottom: 10px;
+            
+      
+        }
+        .analytics-block-art table
+        {
+            margin-left: 15px;
+            margin-top: 15px;
+        }
+        .analytics-block-env
+        {
+            width: 630px;
+            height: 260px;
+            margin-top: 60px;
+            
+        }
+        .analytics-block-geo
+        {
+    
+            width: 615px;
+            clear: both;
+            margin-top: 0px;
+        }
+        .analytics-block-move
+        {
+    
+            width: 565px;
+            margin-top: 0px;
+        }
+        
+        .analytics-block-weight
+        {
+            clear: both;
+            width: 565px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .analytics-block-header
+        {
+            padding: 10px;
+            text-align: center;
+            color: white;
+            background-color: #28708F;
+        }
+        .analytics-block-art .analytics-block-header
+        {
+              background-color: #D24513;
+        }
+        .analytics-block-content
+        {
+            padding: 10px;
+        }
+        .analytics-block-content  table, th, td {
+            border: 1px solid #E1E3E7;
+            border-collapse: collapse;
+            padding: 10px;
+        }
+    </style>
+  <template>
+    
+      <div class="content content-analytics">
+            
+            <div class="analytics-block-wrapper">
+                <div class="analytics-block analytics-block-art">
+                    <div class="analytics-block-header">
+                        Artifacts
+                    </div>
+                    
+                    <div class="analytics-block-content">
+                        <table>
+                          <tr>
+                            <th>Artifact</th>
+                            <th>Damage Temp</th>
+                            <th>Damage Humidty</th>
+                            <th>Damage Gas Level</th>
+                          </tr>
+                          <tr>
+                            <td>Painting</td>
+                            <td>30</td>
+                            <td>30</td>
+                            <td>30</td>
+                          </tr>
+                          <tr>
+                            <td>Pottery</td>
+                            <td>30</td>
+                            <td>30</td>
+                            <td>30</td>
+                          </tr>
+                          <tr>
+                            <td>Wax Figure</td>
+                            <td>90</td>
+                            <td>54</td>
+                            <td>10</td>
+                          </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                 <div class="analytics-block analytics-block-env">
+                    <div class="analytics-block-header">
+                        Environment
+                    </div>
+                    
+                    <div class="analytics-block-content">
+                        content
+                    </div>
+                </div>
+                
+                <div class="analytics-block analytics-block-geo">
+                    <div class="analytics-block-header">
+                        Geophraphic Location
+                    </div>
+                    
+                    <div class="analytics-block-content">
+                        Map goes here
+                    </div>
+                </div>
+                
+                <div class="analytics-block analytics-block-move">
+                    <div class="analytics-block-header">
+                        Movement
+                    </div>
+                    
+                    <div class="analytics-block-content">
+                        content
+                    </div>
+                </div>
+                
+                <div class="analytics-block analytics-block-weight">
+                    <div class="analytics-block-header">
+                        Weight
+                    </div>
+                    
+                    <div class="analytics-block-content">
+                        content
+                    </div>
+                </div>
+                
+                
+        </div>
+    </div>
     <iron-ajax id="aboutContentAjaxEl" handle-as="text"></iron-ajax>
   </template>
-  <script>
+  
+    <script>
     Polymer({
       is: 'about-view',
       properties: {},
       ready: function() {
         var that = this;
         this.$.aboutContentAjaxEl.url = "/docs";
-
         this.$.aboutContentAjaxEl.addEventListener('response', function(evt) {
           that.$.aboutContentMarkdown.markdown = evt.detail.response;
         });
