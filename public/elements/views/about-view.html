@@ -5,6 +5,10 @@
 <link rel="import" href="../../bower_components/marked-element/marked-element.html">
 <dom-module id="about-view">
     <style>
+        google-map{
+          height: 300px;
+          width: 300px;
+      }
         .content-analytics
         {
             background-color: #E4E4E4;
@@ -145,7 +149,22 @@
                     </div>
                     
                     <div class="analytics-block-content">
-                        Map goes here
+                        <div class="map">
+                          
+                            <iron-ajax id="ajaxRequest"
+                                url="https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints"
+                                handle-as="json"
+                                on-response="handleResponse"
+                                last-response="{{data}}"
+                                on-error="handleResponseError"
+                                method = "POST" >
+                            </iron-ajax>    
+
+                            <google-map fit-to-marker api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc" id="map2">
+                              <google-map-marker latitude="" longitude="" draggable="true"></google-map-marker>
+                            </google-map>  
+      
+ </div>
                     </div>
                 </div>
                 
@@ -155,7 +174,7 @@
                     </div>
                     
                     <div class="analytics-block-content">
-                        content
+                        
                     </div>
                 </div>
                 
@@ -165,7 +184,7 @@
                     </div>
                     
                     <div class="analytics-block-content">
-                        content
+                        
                     </div>
                 </div>
                 
@@ -180,13 +199,61 @@
       is: 'about-view',
       properties: {},
       ready: function() {
-        var that = this;
-        this.$.aboutContentAjaxEl.url = "/docs";
-        this.$.aboutContentAjaxEl.addEventListener('response', function(evt) {
-          that.$.aboutContentMarkdown.markdown = evt.detail.response;
-        });
-        this.$.aboutContentAjaxEl.generateRequest();
-      }
+            var headers = {
+                "Authorization" : "bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI0Y2RmOGM1YTBkOWM0MWFhODU3MWNhYTZhNDc2NWY2ZiIsInN1YiI6ImFwcF9jbGllbnRfaWRfMTMiLCJzY29wZSI6WyJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5pbmdlc3QiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5xdWVyeSIsInRpbWVzZXJpZXMuem9uZXMuZjNlMWVmMjctOTU0My00YjVlLWExNWYtMTg2ZWVlZWEzNmQzLnVzZXIiLCJ1YWEucmVzb3VyY2UiLCJvcGVuaWQiLCJ1YWEubm9uZSIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgudXNlciJdLCJjbGllbnRfaWQiOiJhcHBfY2xpZW50X2lkXzEzIiwiY2lkIjoiYXBwX2NsaWVudF9pZF8xMyIsImF6cCI6ImFwcF9jbGllbnRfaWRfMTMiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjEzZjdjMzgyIiwiaWF0IjoxNTAxNDIwNTI5LCJleHAiOjE1MDE0NjM3MjksImlzcyI6Imh0dHBzOi8vNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0LnByZWRpeC11YWEucnVuLmF3cy11c3cwMi1wci5pY2UucHJlZGl4LmlvL29hdXRoL3Rva2VuIiwiemlkIjoiNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0IiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMyIsImFwcF9jbGllbnRfaWRfMTMiXX0.RCRJk7EavJ4VkJEwIrQ4oC3ds7L_QDmWCn3ZE68VukexVSSE4tKbiHCDzIFHFOFQnC-Qms6zQOGFG7Lp01VWKXWpGXB5PcigehdHA5Th1AaGhLJ3npxi-lqco_WVRBdRPLWhI07D6ZmXVB8N0dtAesc0T6l9hBPGy2i0k6R3VJqtXLt9b0dg6oZV0wPEx1V3Q_sM9iMRbog2bPMwfCIhf_A287Uko2rSkFKrfnujVy_0hqnc-kgBAwnBRzemEQwGZr6eGy5k4g1yPXMdwCMPABjl5HewfCYEk1R-wBmThoNrAR2onDpDNHSHBkAODGc_S4hRVGmhvSUv0r3s5b6aWQ",
+                "Predix-Zone-Id" : "f3e1ef27-9543-4b5e-a15f-186eeeea36d3",
+                "Content-Type" : "application/json"
+            }
+            
+            var body = {
+                "tags": [
+                {
+                  "name": "car-gps1",
+                  "order": "desc"
+                }
+              ],    
+              "start": 1501276077
+            }
+            
+            this.$.ajaxRequest.headers = headers;
+            this.$.ajaxRequest.body = body;
+            console.log("here");
+            this.$.ajaxRequest.generateRequest();  
+        },
+        handleResponse : function(){
+            //console.log(this.data.tags.0.name);
+            var data = this.get("data");
+            var splt = data.tags[0].results[0].values[0][1];
+            var ar = splt.split(",");
+            var ns = ar[0].replace("N","").replace("S","");
+            var ew = ar[1].replace("E","").replace("W","");
+            //this.set("lat1",ns);
+            ///this.set("lon1",ew);
+            this.$.map2.latitude = ns/100;
+            this.$.map2.longitude = -ew/100;
+            
+            //this.$.map.latitude = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+            //this.$.map.longitude = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+            
+           
+            console.log("lat" , ns);
+            console.log("lon" , ew);
+        },
+        handleResponseError : function(){
+            debugger;
+        },
+      
     });
+      
+      ////////////////////////////////////////
+      ////////////////////////////////////////
+      
+  
+      //var gpsdata = this.data;
+      //var parsed = JSON.parse(gpsdata);
+      //document.getElementById("demo").innerHTML = parsed.name;
+      
+      ////////////////////////////////////////////
+      ////////////////////////////////////////////
   </script>
 </dom-module>
