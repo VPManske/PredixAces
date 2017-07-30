@@ -10,6 +10,7 @@
 <link rel="import" href="../../bower_components/px-card/px-card.html">
 <link rel="import" href="../../bower_components/px-spinner/px-spinner.html">
 <link rel="import" href="../../bower_components/google-map/google-map.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="rmd-view">
   <style>
@@ -22,6 +23,21 @@
       }
   </style>
   <template>
+      
+      <iron-ajax id="ajaxRequest"
+            url="https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints"
+            handle-as="json"
+            on-response="handleResponse"
+            last-response="{{data}}"
+            on-error="handleResponseError"
+                 method = "POST"
+                 >
+      </iron-ajax>
+      
+<google-map fit-to-marker api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
+  <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
+</google-map>
+      
       <h1>Test</h1>
       
       <px-card header-text="Card" icon="px-fea:analysis">
@@ -37,10 +53,6 @@
       
       <px-spinner size="100">
       </px-spinner>   
-      
-<google-map fit-to-marker api-key="AIzaSyD3E1D9b-Z7ekrT3tbhl_dy8DCXuIuDDRc">
-  <google-map-marker latitude="37.78" longitude="-122.4" draggable="true"></google-map-marker>
-</google-map>
 
    
   </template>
@@ -53,108 +65,43 @@
       
     Polymer({
       is: 'rmd-view',
-      properties: {
-        rmdAssetModel: {
-          type: Object,
-          observer: '_assetModelChanged'
+      properties: {},
+        ready: function() {
+            var headers = {
+                "Authorization" : "bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI0Y2RmOGM1YTBkOWM0MWFhODU3MWNhYTZhNDc2NWY2ZiIsInN1YiI6ImFwcF9jbGllbnRfaWRfMTMiLCJzY29wZSI6WyJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5pbmdlc3QiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5xdWVyeSIsInRpbWVzZXJpZXMuem9uZXMuZjNlMWVmMjctOTU0My00YjVlLWExNWYtMTg2ZWVlZWEzNmQzLnVzZXIiLCJ1YWEucmVzb3VyY2UiLCJvcGVuaWQiLCJ1YWEubm9uZSIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgudXNlciJdLCJjbGllbnRfaWQiOiJhcHBfY2xpZW50X2lkXzEzIiwiY2lkIjoiYXBwX2NsaWVudF9pZF8xMyIsImF6cCI6ImFwcF9jbGllbnRfaWRfMTMiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjEzZjdjMzgyIiwiaWF0IjoxNTAxNDIwNTI5LCJleHAiOjE1MDE0NjM3MjksImlzcyI6Imh0dHBzOi8vNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0LnByZWRpeC11YWEucnVuLmF3cy11c3cwMi1wci5pY2UucHJlZGl4LmlvL29hdXRoL3Rva2VuIiwiemlkIjoiNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0IiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMyIsImFwcF9jbGllbnRfaWRfMTMiXX0.RCRJk7EavJ4VkJEwIrQ4oC3ds7L_QDmWCn3ZE68VukexVSSE4tKbiHCDzIFHFOFQnC-Qms6zQOGFG7Lp01VWKXWpGXB5PcigehdHA5Th1AaGhLJ3npxi-lqco_WVRBdRPLWhI07D6ZmXVB8N0dtAesc0T6l9hBPGy2i0k6R3VJqtXLt9b0dg6oZV0wPEx1V3Q_sM9iMRbog2bPMwfCIhf_A287Uko2rSkFKrfnujVy_0hqnc-kgBAwnBRzemEQwGZr6eGy5k4g1yPXMdwCMPABjl5HewfCYEk1R-wBmThoNrAR2onDpDNHSHBkAODGc_S4hRVGmhvSUv0r3s5b6aWQ",
+                "Predix-Zone-Id" : "f3e1ef27-9543-4b5e-a15f-186eeeea36d3",
+                "Content-Type" : "application/json"
+            }
+            
+            var body = {
+                "tags": [
+                {
+                  "name": "car-gps1",
+                  "order": "desc"
+                }
+              ],
+              "start": 1501276077
+            }
+            
+            this.$.ajaxRequest.headers = headers;
+            this.$.ajaxRequest.body = body;
+            console.log("here");
+            this.$.ajaxRequest.generateRequest();  
         },
-        openedAsset: {
-          type: Object,
-          observer: '_openedAssetChanged'
+        handleResponse : function(){
+            debugger;
         },
-        rmdTableData: {
-          type: Object
+        handleResponseError : function(){
+            debugger;
         },
-        displayTags: {
-          type: Array
-        },
-        showTimeseriesChart: {
-          type: Boolean,
-          value: false
-        },
-        wsUrl: {
-          type: String
-        },
-        kpiBarWrapperState: {
-          type: String
-        }
-      },
-
-      _formatTagsForDisplay: function(assetTag) {
-        var tags = []
-        Object.keys(assetTag).forEach(function(key) {
-          var tag = {
-            key: assetTag[key].timeseriesDatasource.tag,
-            val: assetTag[key].label,
-            unit: 'psi'
-          }
-          if (tag.key.indexOf('Temperature')>-1) {
-            tag.unit = 'F';
-          } else if (tag.key.indexOf('Ratio')>-1) {
-            tag.unit = '';
-          } else if (tag.key.indexOf('Velocity')>-1) {
-            tag.unit = 'm/s'
-          }
-          tags.push(tag);
-        });
-        return tags;
-      },
-      _openedAssetChanged: function(newVal) {
-        console.log('asset opened:', newVal);
-        this.$.datatableAjaxEl.url = "/api/datagrid" + newVal.uri;
-        this.$.kpiBarAjaxEl.url = this.$.datatableAjaxEl.url + '/summary';
-        this.$.datatableAjaxEl.generateRequest();
-        if (newVal.assetTag) {
-          this.displayTags = this._formatTagsForDisplay(newVal.assetTag);
-        }
-        this.showTimeseriesChart = newVal.uri.indexOf('asset') >= 0;
-      },
-      _assetModelChanged: function(newVal) {
-        console.log('asset model changed:', newVal);
-      },
-
-      // We'll load the timeseries-chart asynchronously, since it's pretty heavy.
-      _loadFragment: function(elementId, fragmentPath) {
-        if (Polymer.isInstance(this.$[elementId])) {
-          return;
-        }
-        Polymer.Base.importHref(fragmentPath, null, function() {
-          console.log('failed to load:', fragmentPath);
-        }, true);
-      },
-
-      ready: function(){
-      }
+      
     });
       
       ////////////////////////////////////////
       ////////////////////////////////////////
-      /*
       
-var settings = {
-  "async": true,
-  "crossDomain": true,
-  "url": "https://time-series-store-predix.run.aws-usw02-pr.ice.predix.io/v1/datapoints",
-  "method": "POST",
-  "headers": {
-    "authorization": "bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImxlZ2FjeS10b2tlbi1rZXkiLCJ0eXAiOiJKV1QifQ.eyJqdGkiOiI0Y2RmOGM1YTBkOWM0MWFhODU3MWNhYTZhNDc2NWY2ZiIsInN1YiI6ImFwcF9jbGllbnRfaWRfMTMiLCJzY29wZSI6WyJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5pbmdlc3QiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMy5xdWVyeSIsInRpbWVzZXJpZXMuem9uZXMuZjNlMWVmMjctOTU0My00YjVlLWExNWYtMTg2ZWVlZWEzNmQzLnVzZXIiLCJ1YWEucmVzb3VyY2UiLCJvcGVuaWQiLCJ1YWEubm9uZSIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgudXNlciJdLCJjbGllbnRfaWQiOiJhcHBfY2xpZW50X2lkXzEzIiwiY2lkIjoiYXBwX2NsaWVudF9pZF8xMyIsImF6cCI6ImFwcF9jbGllbnRfaWRfMTMiLCJncmFudF90eXBlIjoiY2xpZW50X2NyZWRlbnRpYWxzIiwicmV2X3NpZyI6IjEzZjdjMzgyIiwiaWF0IjoxNTAxNDIwNTI5LCJleHAiOjE1MDE0NjM3MjksImlzcyI6Imh0dHBzOi8vNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0LnByZWRpeC11YWEucnVuLmF3cy11c3cwMi1wci5pY2UucHJlZGl4LmlvL29hdXRoL3Rva2VuIiwiemlkIjoiNzdhMzg2N2ItY2NlMC00MjNkLWE4ZWMtNDQ4ZDIwNDI2OTg0IiwiYXVkIjpbInVhYSIsIm9wZW5pZCIsInByZWRpeC1hc3NldC56b25lcy41OGE2ZmEzYy0yM2QyLTQzNWMtOWIzNy03YjVlZWQ0NDVjNjgiLCJ0aW1lc2VyaWVzLnpvbmVzLmYzZTFlZjI3LTk1NDMtNGI1ZS1hMTVmLTE4NmVlZWVhMzZkMyIsImFwcF9jbGllbnRfaWRfMTMiXX0.RCRJk7EavJ4VkJEwIrQ4oC3ds7L_QDmWCn3ZE68VukexVSSE4tKbiHCDzIFHFOFQnC-Qms6zQOGFG7Lp01VWKXWpGXB5PcigehdHA5Th1AaGhLJ3npxi-lqco_WVRBdRPLWhI07D6ZmXVB8N0dtAesc0T6l9hBPGy2i0k6R3VJqtXLt9b0dg6oZV0wPEx1V3Q_sM9iMRbog2bPMwfCIhf_A287Uko2rSkFKrfnujVy_0hqnc-kgBAwnBRzemEQwGZr6eGy5k4g1yPXMdwCMPABjl5HewfCYEk1R-wBmThoNrAR2onDpDNHSHBkAODGc_S4hRVGmhvSUv0r3s5b6aWQ",
-    "predix-zone-id": "f3e1ef27-9543-4b5e-a15f-186eeeea36d3",
-    "content-type": "application/json",
-    "cache-control": "no-cache",
-    "postman-token": "7d4e2f61-50f1-7590-b9c3-0a6e22fb1661"
-  },
-  "processData": false,
-  "data": "{\n  \"tags\": [\n    {\n      \"name\": \"Humidity:STORAGE1\",\n      \"order\": \"desc\"\n    }\n  ],\n  \"start\": 1501276077\n\t\n}"
-}
+      
 
-$.ajax(settings).done(function (response) {
-  console.log(response);
-    
-    // ADD CODE to do something with "JSON object response"    
-    // var parsedtxt = JSON.parse(txt);    
-    // document.getElementById('demo').innerHTML = parsedtxt.name;
-    
-});*/
       
       ////////////////////////////////////////////
       ////////////////////////////////////////////
